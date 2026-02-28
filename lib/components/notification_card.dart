@@ -31,8 +31,6 @@ class NotificationCard extends StatelessWidget {
 
         title: Text(
           notification.title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight:
                 notification.isRead ? FontWeight.normal : FontWeight.bold,
@@ -40,18 +38,9 @@ class NotificationCard extends StatelessWidget {
         ),
 
         subtitle: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              notification.body,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              notification.body,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
+            Text(notification.body),
             Text(
               formatNotificationDate(notification.createdAt),
               style: const TextStyle(fontSize: 12, color: Colors.grey),

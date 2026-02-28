@@ -1,6 +1,7 @@
 import 'package:deliveryapp/styles/app_colors.dart';
 import 'package:deliveryapp/util/model/order.dart';
 import 'package:deliveryapp/util/services/order_service.dart';
+import 'package:deliveryapp/util/types.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,11 +25,16 @@ class PaymentController extends GetxController {
     isExchangePay.value = index == 0;
   }
 
-  Future<void> confirmCollectExchange() async {
+  Future<void> checkOrderStatus() async {
     try {
+      isload.value = true;
       final double lbp = double.tryParse(lbpController.text) ?? 0.0;
       final double usd = double.tryParse(usdController.text) ?? 0.0;
       await orderService.orderPayment(order.value.orderNumber, usd, lbp);
+      await orderService.updateOrderToTheNextStatus(
+        order.value.orderNumber,
+        getNextOrderStatus(order.value.status, order.value.paymentStatus).value,
+      );
 
       Get.snackbar(
         "Success",
@@ -45,6 +51,8 @@ class PaymentController extends GetxController {
         colorText: Colors.white,
       );
       throw Exception("PaymentController confirmPayment error: $e");
+    } finally {
+      isload.value = false;
     }
   }
 

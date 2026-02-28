@@ -60,7 +60,7 @@ class OrderDetailsController extends GetxController {
     }
   }
 
-  Future<void> _updateWithLoading() async {
+  Future<void> updateWithLoading() async {
     Get.dialog(
       Center(child: CircularProgressIndicator()),
       barrierDismissible: false,
@@ -139,7 +139,7 @@ class OrderDetailsController extends GetxController {
               TextButton(
                 onPressed: () {
                   Get.back();
-                  _updateWithLoading();
+                  updateWithLoading();
                 },
                 child: Text("Yes"),
               ),

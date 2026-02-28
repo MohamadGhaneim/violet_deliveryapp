@@ -24,13 +24,6 @@ class RootController extends GetxController {
 
   String setWelcomeMessage() {
     final hour = DateTime.now().hour;
-    //print("NAAAMEEEEEE :${delivery.value?.fullName}");
-    // final name =
-    //     (delivery.value?.fullName.isNotEmpty ?? false)
-    //         ? delivery.value?.fullName
-    //         : fullName.isNotEmpty
-    //         ? fullName
-    //         : 'Guest';
 
     if (hour >= 18) return "Good Evening ";
     if (hour >= 12) return "Good Afternoon ";

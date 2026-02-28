@@ -9,6 +9,7 @@ class ProfileInteractor {
   Future<Delivery> getDelivery() async {
     try {
       final delivery = await userService.getDelivery();
+
       await PrefHelper.saveDelivery(delivery);
       return delivery;
     } catch (e) {
@@ -19,7 +20,7 @@ class ProfileInteractor {
   Future<void> updateDelivery(Delivery delivery) async {
     try {
       await userService.updateDelivery(delivery);
-      await PrefHelper.saveDelivery(delivery);
+      await PrefHelper.updateDelivery(delivery);
     } catch (e) {
       throw Exception("ProfileInteractor updateDelivery : $e ");
     }

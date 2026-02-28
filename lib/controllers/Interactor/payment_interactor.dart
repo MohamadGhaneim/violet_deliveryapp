@@ -9,9 +9,7 @@ class PaymentInteractor {
     required double lbpAmount,
   }) async {
     try {
-      // print("PaymentInteractor called with:");
-      // print("orderNumber: $orderNumber, usd: $usdAmount, lbp: $lbpAmount");
-      //await orderService.orderPayment(orderNumber, usdAmount, lbpAmount);
+      await orderService.orderPayment(orderNumber, usdAmount, lbpAmount);
     } catch (e) {
       throw Exception("Failed to update payment status: $e");
     }

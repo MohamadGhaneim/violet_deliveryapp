@@ -11,12 +11,6 @@ class LoginController extends GetxController {
   final AuthController authController;
 
   LoginController(this.authController);
-  @override
-  void onClose() {
-    emailControl.dispose();
-    passwordControl.dispose();
-    super.onClose();
-  }
 
   Future<void> googleSignin() async {
     try {

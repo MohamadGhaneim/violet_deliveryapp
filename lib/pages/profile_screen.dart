@@ -103,11 +103,14 @@ class ProfileScreen extends GetView<ProfileController> {
               SizedBox(height: screenHeight * 0.03),
 
               Obx(() {
-                return AppElevatedButton(
-                  onPressed: controller.saveProfile,
-                  text: 'save',
-                  isWait: controller.isSaving.value,
-                  bgColor: AppColors.deepBlue,
+                return SizedBox(
+                  width: double.infinity,
+                  child: AppElevatedButton(
+                    onPressed: controller.saveProfile,
+                    text: 'save',
+                    isWait: controller.isSaving.value,
+                    bgColor: AppColors.deepBlue,
+                  ),
                 );
               }),
             ],

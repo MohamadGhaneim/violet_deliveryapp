@@ -19,7 +19,7 @@ class AppNotification {
     return AppNotification(
       id: json['id'] ?? 0,
       title: json['title'] ?? "",
-      body: json['body'] ?? "",
+      body: json['message'] ?? "",
       isRead: json['is_read'] ?? false,
       createdAt: json['created_at'] ?? 'unknow',
       orderId: json['order_id'],

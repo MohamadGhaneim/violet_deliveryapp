@@ -37,17 +37,15 @@ class NotificationsController extends GetxController {
     page.value = 1;
     hasMore.value = true;
     await fetchNotifications();
-    //await orderController.setAllOrdersDriver();
   }
 
   Future<void> goToOrderDetails(AppNotification selectedNotification) async {
     try {
       isActionLoading.value = true;
-
-      await service.notificationIsRead(selectedNotification);
-
-      if (selectedNotification.orderId == null) {
-        Get.back();
+      if (!selectedNotification.isRead) {
+        await service.notificationIsRead(selectedNotification);
+      }
+      if (selectedNotification.orderId == null || selectedNotification.isRead) {
         return;
       }
       final order = orderController.orders.firstWhereOrNull(
@@ -60,7 +58,6 @@ class NotificationsController extends GetxController {
           'no Order found, refreshing orders...',
           backgroundColor: AppColors.amberYellow,
         );
-        // Get.back();
         return;
       }
       Get.toNamed(AppRoutes.orderDetails, arguments: order);

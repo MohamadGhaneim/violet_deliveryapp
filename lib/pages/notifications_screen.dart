@@ -27,6 +27,7 @@ class NotificationsScreen extends GetView<NotificationsController> {
         return RefreshIndicator(
           onRefresh: controller.refreshNotifications,
           child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: controller.scrollController,
             itemCount:
                 controller.notification.length +

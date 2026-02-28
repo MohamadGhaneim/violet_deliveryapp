@@ -102,36 +102,35 @@ class ArchiveScreen extends GetView<OrderController> {
 
           // orders archive
           Obx(() {
-            final orders = controller.filterArchiveOrders; // filter by date
-            if (controller.isLoading.value) {
-              return const Center(
-                child: Column(children: [CircularProgressIndicator()]),
-              );
-            }
-            if (orders.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(child: Image.asset("assets/images/archive.png")),
-                    ],
-                  ),
-                ),
-              );
-            }
+            final orders = controller.filterArchiveOrders;
+
             return Expanded(
               child: RefreshIndicator(
-                onRefresh: controller.refreshOrders,
-                child: ListView.builder(
-                  itemCount: orders.length,
-                  itemBuilder:
-                      (context, index) => OrderCard(
-                        order: orders[index],
-                        onTap: () => controller.goToOrderDetails(orders[index]),
-                      ),
-                ),
+                onRefresh: () async {
+                  await controller.setOrdersArchive();
+                },
+                child:
+                    orders.isEmpty
+                        ? ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            Center(
+                              child: Image.asset("assets/images/archive.png"),
+                            ),
+                          ],
+                        )
+                        : ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: orders.length,
+                          itemBuilder:
+                              (context, index) => OrderCard(
+                                order: orders[index],
+                                onTap:
+                                    () => controller.goToOrderDetails(
+                                      orders[index],
+                                    ),
+                              ),
+                        ),
               ),
             );
           }),

@@ -20,10 +20,12 @@ OrderActionType getOrderAction(OrderStatus status) {
     case OrderStatus.pickedUp:
     case OrderStatus.deliveryAssigned:
     case OrderStatus.atWareHouse:
+    case OrderStatus.pickedUpAssign:
+    case OrderStatus.exchange:
+    case OrderStatus.exchangeDeliveryAssigned:
       return OrderActionType.scan;
 
     case OrderStatus.onTheWay:
-    case OrderStatus.pickedUpAssign:
       return OrderActionType.payment;
 
     default:
@@ -38,6 +40,8 @@ const List<OrderStatus> displayedOrderStatuses = [
   OrderStatus.atWareHouse, // scan or confirm
   OrderStatus.deliveryAssigned, // scan or confirm
   OrderStatus.onTheWay, // payment
+  OrderStatus.exchange, // payment
+  OrderStatus.exchangeDeliveryAssigned, // payment
 ];
 
 extension DisplayedOrderTypesLabel on DisplayedOrderTypes {
@@ -58,7 +62,7 @@ extension DisplayedOrderTypesLabel on DisplayedOrderTypes {
       case DisplayedOrderTypes.deliveryAssigned:
         return 'Delivery Assign';
       case DisplayedOrderTypes.onTheWay:
-        return 'On the way';
+        return 'Out for Delivery';
     }
   }
 }
@@ -81,13 +85,20 @@ OrderStatus getNextOrderStatus(
     case OrderStatus.deliveryAssigned:
       return OrderStatus.onTheWay;
 
+    case OrderStatus.exchange:
+      return OrderStatus.exchangeCollected;
+
+    case OrderStatus.exchangeDeliveryAssigned:
+      return OrderStatus.exchangeDelivered;
+
     case OrderStatus.onTheWay:
       if (paymentStatus == PaymentStatus.paid) {
         return OrderStatus.delivered;
       }
-      if (paymentStatus == PaymentStatus.unpaid) {
+      if (paymentStatus == PaymentStatus.paidWithExchange) {
         return OrderStatus.deliveredWithExchange;
       }
+
       return OrderStatus.wrong;
     default:
       return OrderStatus.wrong;
@@ -108,11 +119,14 @@ enum OrderStatus {
   deliveredWithExchange, // Delivered with exchange
   paidToShop,
   exchange,
+  exchangeDeliveryAssigned,
+  exchangeDelivered,
+  exchangeCollected,
 }
 
 enum PaymentStatus { paid, unpaid, paidWithExchange }
 
-enum PriorityStatus { urgent, normal }
+enum PriorityStatus { high, normal, low }
 
 extension OrderStatusLabel on OrderStatus {
   String get value {
@@ -132,7 +146,7 @@ extension OrderStatusLabel on OrderStatus {
       case OrderStatus.deliveryAssigned: // update to pickedUpAssign
         return 'Delivery Assigned';
       case OrderStatus.onTheWay:
-        return 'On the way';
+        return 'Out for Delivery';
       case OrderStatus.delivered:
         return 'Delivered';
       case OrderStatus.delayed:
@@ -142,7 +156,13 @@ extension OrderStatusLabel on OrderStatus {
       case OrderStatus.deliveredWithExchange:
         return 'Delivered with exchange';
       case OrderStatus.exchange:
-        return 'Exchange';
+        return 'For Exchange';
+      case OrderStatus.exchangeDeliveryAssigned:
+        return 'Exchange Delivery Assigned';
+      case OrderStatus.exchangeDelivered:
+        return 'Exchange Delivered';
+      case OrderStatus.exchangeCollected:
+        return 'Exchange Collected';
     }
   }
 }
@@ -165,6 +185,7 @@ String getOrderStatusCustomerOrShopOwner(OrderStatus status) {
   switch (status) {
     case OrderStatus.pickedUp:
     case OrderStatus.pickedUpAssign:
+    case OrderStatus.exchangeDelivered:
       return "shopOwner";
 
     case OrderStatus.deliveryAssigned:
@@ -173,6 +194,7 @@ String getOrderStatusCustomerOrShopOwner(OrderStatus status) {
     case OrderStatus.onTheWay:
     case OrderStatus.returned:
     case OrderStatus.deliveredWithExchange:
+    case OrderStatus.exchange:
       return "customer";
 
     default:
@@ -184,7 +206,7 @@ enum OrderType { normal, exchange }
 
 OrderType getOrderType(String status) {
   switch (status) {
-    case 'Exchange':
+    case 'For Exchange':
       return OrderType.exchange;
     case 'normal':
       return OrderType.normal;
@@ -197,9 +219,9 @@ extension OrderTypeLabel on OrderType {
   String get value {
     switch (this) {
       case OrderType.exchange:
-        return 'Exchange';
+        return 'For Exchange';
       case OrderType.normal:
-        return 'Normal';
+        return 'normal';
     }
   }
 }
@@ -233,7 +255,7 @@ OrderStatus orderStatusFromString(String? value) {
     case 'Paid to Shop':
       return OrderStatus.paidToShop;
 
-    case 'On the way':
+    case 'Out for Delivery':
       return OrderStatus.onTheWay;
 
     case 'Delivered':
@@ -253,8 +275,14 @@ OrderStatus orderStatusFromString(String? value) {
 
     case 'At Warehouse':
       return OrderStatus.atWareHouse;
-    case 'Exchange':
+    case 'For Exchange':
       return OrderStatus.exchange;
+    case 'Exchange Delivery Assigned':
+      return OrderStatus.exchangeDeliveryAssigned;
+    case 'Exchange Delivered':
+      return OrderStatus.exchangeDelivered;
+    case 'Exchange Collected':
+      return OrderStatus.exchangeCollected;
 
     default:
       return OrderStatus.wrong;
@@ -266,6 +294,7 @@ PaymentStatus paymentStatusFromString(String value) {
     case 'paid':
       return PaymentStatus.paid;
     case 'unpaid':
+      return PaymentStatus.unpaid;
     case 'paid with exchange':
       return PaymentStatus.paidWithExchange;
     default:
@@ -295,6 +324,8 @@ extension OrderStatusColor on OrderStatus {
       case OrderStatus.returned:
         return Colors.brown;
       case OrderStatus.deliveredWithExchange:
+        return const Color.fromARGB(255, 18, 216, 28);
+      case OrderStatus.exchange:
         return Colors.teal;
       // case OrderStatus.paidToShop:
       //   return Colors.green.shade800;

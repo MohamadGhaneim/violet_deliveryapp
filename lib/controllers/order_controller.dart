@@ -1,5 +1,7 @@
 import 'package:deliveryapp/components/app_scanner_dialog.dart';
+import 'package:deliveryapp/components/is_loged_in_dialog.dart';
 import 'package:deliveryapp/config/app_routes.dart';
+import 'package:deliveryapp/repository/sheard_preferances.dart';
 import 'package:deliveryapp/styles/app_colors.dart';
 import 'package:deliveryapp/util/model/order.dart';
 import 'package:deliveryapp/util/services/order_service.dart';
@@ -16,7 +18,8 @@ class OrderController extends GetxController {
 
   var archiveOrders = <Order>[].obs;
   //var filterdarchiveOrders = <Order>[].obs;
-  var selectedDeliveryStatus = DeliveryCase.customer.obs;
+  var selectedDeliveryStatus = DeliveryCase.shopOwner.obs;
+
   var selectedDate = Rxn<DateTime>();
   final Set<OrderStatus> archiveCustomerStatus = {
     OrderStatus.delivered,
@@ -27,6 +30,7 @@ class OrderController extends GetxController {
   final Set<OrderStatus> archiveShopStatus = {
     OrderStatus.pickedUp,
     OrderStatus.paidToShop,
+    OrderStatus.exchangeDelivered,
   };
 
   void pickDate(BuildContext context) async {
@@ -72,6 +76,10 @@ class OrderController extends GetxController {
   // set order archive
   Future<void> setOrdersArchive() async {
     try {
+      final loggedin = await PrefHelper.isloggedin();
+      if (!loggedin) {
+        return;
+      }
       isLoading.value = true;
       archiveOrders.value = await orderService.getOrdersArchive();
     } catch (e) {
@@ -83,6 +91,10 @@ class OrderController extends GetxController {
 
   Future<void> setAllOrdersDriver() async {
     try {
+      final loggedin = await PrefHelper.isloggedin();
+      if (!loggedin) {
+        return;
+      }
       isLoading.value = true;
       orders.value = await orderService.getAllOrdersDriver();
     } catch (e) {
@@ -103,7 +115,6 @@ class OrderController extends GetxController {
   }
 
   List<Order> get filteredOrders {
-    //remarkForScan();
     if (selectedStatus.value == OrderStatus.all) {
       return orders.toList();
     }
@@ -112,18 +123,6 @@ class OrderController extends GetxController {
 
   void goToOrderDetails(Order order) {
     Get.toNamed(AppRoutes.orderDetails, arguments: order);
-  }
-
-  void remarkForScan() {
-    if (selectedStatus.value != OrderStatus.all &&
-        getOrderAction(selectedStatus.value) == OrderActionType.scan) {
-      Get.snackbar(
-        "Info",
-        "You are in ${selectedStatus.value.value} status. You can scan the QR code to update the order status.",
-        backgroundColor: AppColors.deepBlue,
-        colorText: Colors.white,
-      );
-    }
   }
 
   // methode get order from orders by order number
@@ -151,6 +150,13 @@ class OrderController extends GetxController {
   }
 
   Future<void> scanOnce() async {
+    final loggedin = await PrefHelper.isloggedin();
+
+    if (!loggedin) {
+      Get.dialog(const NotLoggedInDialog());
+      return;
+    }
+
     final scannedId = await Get.dialog<String>(
       ScannerDialog(),
       barrierDismissible: false,

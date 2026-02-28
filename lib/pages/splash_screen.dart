@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   initState() {
     super.initState();
     Timer(
-      Duration(seconds: 4),
+      Duration(seconds: 2),
       () async => Get.offAllNamed(
         await PrefHelper.isloggedin() ? AppRoutes.rootPage : AppRoutes.login,
       ),

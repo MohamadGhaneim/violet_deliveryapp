@@ -22,6 +22,13 @@ class PrefHelper {
     await prefs.setString(_userKey, jsonString);
   }
 
+  // update delivery
+  static Future<void> updateDelivery(Delivery delivery) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(delivery.toJson());
+    await prefs.setString(_userKey, jsonString);
+  }
+
   /// GET
   static Future<Delivery> getDelivery() async {
     final prefs = await SharedPreferences.getInstance();

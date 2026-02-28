@@ -100,18 +100,20 @@ class PaymentScreen extends GetView<PaymentController> {
                     Obx(
                       () => Column(
                         children: [
-                          if (controller.order.value.type == OrderType.normal)
+                          if (controller.order.value.type == OrderType.exchange)
                             AppCheckBox(
+                              isloading: controller.isload.value,
                               isChecked: controller.collectExchange.value,
                               label: 'collect Exchange',
                               onChanged: (value) {
                                 controller.collectExchange.value =
                                     value ?? false;
+                                controller.checkOrderStatus();
                               },
                             ),
 
                           const SizedBox(height: 24),
-                          if (controller.order.value.type == OrderType.exchange)
+                          if (controller.order.value.type == OrderType.normal)
                             AppAddToCard(
                               text: "Confirm Payment",
                               onPressed: controller.confirmPayment,

@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:deliveryapp/components/is_loged_in_dialog.dart';
 import 'package:deliveryapp/controllers/Interactor/profile_interactor.dart';
+import 'package:deliveryapp/repository/sheard_preferances.dart';
 import 'package:deliveryapp/util/model/delivery.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,6 +48,12 @@ class ProfileController extends GetxController {
 
   Future<void> saveProfile() async {
     try {
+      final loggedin = await PrefHelper.isloggedin();
+      if (!loggedin) {
+        Get.dialog(const NotLoggedInDialog());
+        return;
+      }
+
       isSaving.value = true;
       final newDelivery = Delivery(
         username: delivery.value?.username ?? '',
@@ -78,6 +86,10 @@ class ProfileController extends GetxController {
 
   Future<void> loadProfile() async {
     try {
+      final loggedin = await PrefHelper.isloggedin();
+      if (!loggedin) {
+        return;
+      }
       final user = await profileInteractor.getDelivery();
       delivery.value = user;
       emailController.text = user.email;

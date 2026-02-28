@@ -1,3 +1,4 @@
+import 'package:deliveryapp/components/app_button.dart';
 import 'package:deliveryapp/components/app_icon_button.dart';
 import 'package:deliveryapp/controllers/order_details_controller.dart';
 import 'package:deliveryapp/styles/app_colors.dart';
@@ -79,9 +80,6 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    // boxShadow: [
-                    //   BoxShadow(color: Colors.black12, offset: Offset.zero),
-                    // ],
                     borderRadius: BorderRadius.circular(24),
                     color: AppColors.lightGray,
                   ),
@@ -94,45 +92,54 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                         // Order ID and status
                         Row(
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Booking id :"),
-                                Text(
-                                  order.orderNumber,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("status"),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: order.status.color.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    order.status.value,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Booking id :"),
+                                  Text(
+                                    order.orderNumber,
                                     style: TextStyle(
-                                      color: order.status.color,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                            ),
+
+                            const SizedBox(width: 10),
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("status"),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: order.status.color.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      order.status.value,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
+                                      style: TextStyle(
+                                        color: order.status.color,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -155,7 +162,7 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                               children: [
                                 Text("Contact info :"),
                                 Text(
-                                  role == 'Customer'
+                                  role == 'customer'
                                       ? "Customer: ${order.customer.fullName}"
                                       : "Shop: ${order.shop.name}",
                                   style: TextStyle(
@@ -164,9 +171,9 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                                   ),
                                 ),
                                 Text(
-                                  role == 'Customer'
-                                      ? "Customer: ${order.customer.phoneNumber}"
-                                      : "Shop: ${order.shop.phoneNumber}",
+                                  role == 'customer'
+                                      ? "phone : ${order.customer.phoneNumber}"
+                                      : "phone : ${order.shop.phoneNumber}",
                                 ),
                               ],
                             ),
@@ -188,65 +195,83 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                             children: [
                               //
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24),
-                                      color: AppColors.amberYellow,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Total: \$${order.total.toStringAsFixed(2)}",
-                                        ),
-                                        const Divider(
-                                          color: AppColors.deepBlue,
-                                        ),
-                                        Text(
-                                          "Description: ${order.package.description}",
-                                        ),
-                                        const Divider(
-                                          color: AppColors.deepBlue,
-                                        ),
-                                        Text(
-                                          "Weight: ${order.package.weight} kg",
-                                        ),
-                                        const Divider(
-                                          color: AppColors.deepBlue,
-                                        ),
-                                        Text(
-                                          "Payment: ${order.paymentStatus.name}",
-                                        ),
-                                      ],
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(24),
+                                        color: AppColors.amberYellow,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Total: \$${order.total.toStringAsFixed(2)}",
+                                          ),
+                                          Divider(color: AppColors.deepBlue),
+                                          Text(
+                                            "Description: ${order.package.description}",
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Divider(color: AppColors.deepBlue),
+                                          Text(
+                                            "Weight: ${order.package.weight} kg",
+                                          ),
+                                          Divider(color: AppColors.deepBlue),
+                                          Text(
+                                            "Payment: ${order.paymentStatus.name}",
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
+
+                                  const SizedBox(width: 12),
+
                                   SizedBox(
-                                    height: 200,
-                                    width: 200,
+                                    height: 160,
+                                    width: 160,
                                     child: Image.asset(
                                       "assets/images/box_order_details.png",
+                                      fit: BoxFit.contain,
                                     ),
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 20),
+
+                              /// scan ///
+                              if (actionType == OrderActionType.scan)
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        IconlyLight.scan,
+                                        size: 40,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {
+                                        controller.scanOnce();
+                                      },
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Obx(() {
+                                      return AppElevatedButton(
+                                        onPressed: controller.updateWithLoading,
+                                        text:
+                                            'update to ${getNextOrderStatus(order.status, order.paymentStatus).name}',
+                                        isWait: controller.isLoading.value,
+                                        bgColor: AppColors.deepBlue,
+                                      );
+                                    }),
+                                  ],
+                                ),
 
                               /// payment ///
-                              if (actionType == OrderActionType.scan)
-                                IconButton(
-                                  icon: Icon(
-                                    IconlyLight.scan,
-                                    size: 40,
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    controller.scanOnce();
-                                  },
-                                ),
                               if (actionType == OrderActionType.payment)
                                 ElevatedButton.icon(
                                   icon: Icon(
@@ -254,7 +279,7 @@ class OrderDetailsScreen extends GetView<OrderDetailsController> {
                                     color: AppColors.offWhite,
                                   ),
                                   label: Text(
-                                    "Payment",
+                                    "Confirm Order",
                                     style: TextStyle(color: AppColors.offWhite),
                                   ),
                                   style: ElevatedButton.styleFrom(

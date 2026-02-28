@@ -8,11 +8,14 @@ class SettingScreen extends GetView<SettingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      body: RefreshIndicator(
+        onRefresh: () {
+          return controller.setprofile();
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
           children: [
-            // display profile picture and email at the top
             Obx(() {
               return Card(
                 elevation: 10,
@@ -33,6 +36,8 @@ class SettingScreen extends GetView<SettingController> {
               );
             }),
 
+            const SizedBox(height: 10),
+
             Card(
               elevation: 10,
               child: ListTile(
@@ -52,13 +57,14 @@ class SettingScreen extends GetView<SettingController> {
 
             const SizedBox(height: 10),
             const Divider(),
+
             Center(
               child: ElevatedButton.icon(
                 onPressed: controller.logout,
                 icon: const Icon(Icons.logout, color: Colors.white),
-                label: Text(
+                label: const Text(
                   "Logout",
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               ),

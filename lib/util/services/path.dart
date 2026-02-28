@@ -1,5 +1,5 @@
 class MyPath {
-  // static const String _url = "https://8379-185-187-131-209.ngrok-free.app/api";
+  //static const String _url = "https://c69f-185-187-131-151.ngrok-free.app/api";
   static const String _url = "https://delivery-app-ebex.onrender.com/api";
 
   // Auth
